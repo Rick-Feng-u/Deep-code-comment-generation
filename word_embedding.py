@@ -8,24 +8,28 @@ from tensorflow.keras.models import Sequential
 
 import numpy as np
 
-generated_sequence = xml_to_prufer('test.xml')
-voc_size = 171476
+def word_embedding():
 
-onehot_repr=[one_hot(words,voc_size)for words in generated_sequence] 
-print(onehot_repr)
+    generated_sequence, word_mapping = xml_to_prufer('test.xml')
+    voc_size = 171476
 
-# TODO would sentences size too large effect outcome?
-item_size = 28
-embedded_docs=pad_sequences(onehot_repr,padding='post',maxlen=item_size)
-print(embedded_docs)
+    onehot_repr=[one_hot(words,voc_size)for words in generated_sequence] 
+    print(onehot_repr)
 
-# TODO research deep on accurate dimensions
-dimensions = 15
+    # TODO would sentences size too large effect outcome?
+    item_size = 28
+    embedded_docs=pad_sequences(onehot_repr,padding='post',maxlen=item_size)
+    print(embedded_docs)
 
-model=Sequential()
-model.add(Embedding(voc_size,dimensions,input_length=item_size))
-model.compile('adam','mse')
+    # TODO research deep on accurate dimensions
+    dimensions = 15
 
-model.summary()
+    model=Sequential()
+    model.add(Embedding(voc_size,dimensions,input_length=item_size))
+    model.compile('adam','mse')
 
-print(model.predict(embedded_docs)[0])
+    model.summary()
+
+    print(model.predict(embedded_docs)[0])
+    
+    return model.predict(embedded_docs)
